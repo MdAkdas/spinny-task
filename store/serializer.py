@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import Box
 from django.contrib.auth.models import User
 
+
 class BoxSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(),default=serializers.CurrentUserDefault())
     
