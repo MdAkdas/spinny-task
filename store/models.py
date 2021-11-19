@@ -5,7 +5,6 @@ from django.core.exceptions import ValidationError
 from rest_framework.response import Response
 from rest_framework import status
 
-# Create your models here.
 class Box(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE, blank=True, null = True)
     length  = models.IntegerField()
@@ -21,10 +20,6 @@ class Box(models.Model):
         area_sum = Box.objects.all().aggregate(Sum('area'))['area__sum']
         volume_sum = Box.objects.all().aggregate(Sum('volume'))['volume__sum']
 
-        print('total_boxes ', total_boxes)
-        print('area_area ',area_sum)
-        print('volume_volume ',volume_sum)
-
         l = self.length 
         b = self.breadth
         h = self.height
@@ -37,14 +32,15 @@ class Box(models.Model):
 
         if average_area > 100:
             return Response({
-                "message":"You are not the creator of the box. you cann't delete it."
+                "message": "Average Area is greater than the limit. Box cann't be created."
             },
             status=status.HTTP_204_NO_CONTENT)
         elif average_volume > 100:
             return Response({
-                "message":"You are not the creator of the box. you cann't delete it."
+                "message":"Average Volume is greater than the limit. Box cann't be created."
             },
             status=status.HTTP_204_NO_CONTENT)
+            
         self.area = curr_box_area
         self.volume = curr_box_volume
         super(Box, self).save(*args, **kwargs) 
